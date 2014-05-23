@@ -1,0 +1,54 @@
+@media screen and (max-width: 799px){
+	#login_logo{
+		padding:25px 0px 20px;
+		height:57px;
+		width:320px;
+	}
+}
+@media screen and (min-width: 799px){
+	body{
+		background-color:#FFFFFF;
+		
+	}/*
+	header{
+		background-image:url('../../img/background/background_archi.jpg');
+		background-repeat:no-repeat;
+		margin:auto;	
+	}*/
+	#corps{}
+	
+}
+footer {
+	color:#FFFFFF;
+	background-color:#272727;
+}
+
+#page_title{
+	/*background-color:#272727;*/
+	border-top:1px solid #272727;
+	
+	color:#272727;
+}
+#login_form{
+	margin:200px 0px 150px 30%; 
+}
+#login_error{	
+	margin-top:250px;
+}
+input{
+	border:1px solid #3c4b6a;
+}
+label{	
+	color:#272727;
+}
+#valide{	
+	color:#FFFFFF;
+	background-color:#3a8080;
+	border:1px solid #3a8080;	
+}
+#mention{
+	color:#FFFFFF;	
+}
+
+/*ADMIN*/
+.opt.selected:before {color:#cd6e57;}

@@ -1,0 +1,26 @@
+footer {
+	color:#FFFFFF;
+	background-color:#00213d;
+}
+#page_title{	
+	border-top:1px solid #00213d; 
+	color:#00213d; 
+}
+input{
+	border:1px solid #00213d;	
+}
+label{	
+	color:#00213d; 
+}
+#valide{	
+	color:#FFFFFF;
+	background-color:#00213d;
+	border:1px solid #00213d;	
+}
+#mention{
+	color:#FFFFFF;	
+}
+
+
+/*ADMIN*/
+.opt.selected:before {color:#00213d;}
