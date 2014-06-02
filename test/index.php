@@ -2,6 +2,8 @@
 <?php
 
 include 'lib.php';
+include 'tmmlib.php';
+include 'xml2array.php';
 
 // To do things with Moodle, we create a new Moodle class, initialize it, and then call its functions.
 $moodle = new Moodle();
@@ -39,7 +41,7 @@ $usercreate =  $moodle->createUser($userFields);
 if ($usercreate)
   ;//var_dump($usercreate );  // Success, normal result.
 else
-  var_dump($moodle->error); // Error.
+  ;//var_dump($moodle->error); // Error.
  
  }
  /*
@@ -64,7 +66,7 @@ if ($courseCat)
 else
   var_dump($moodle->error); // Error.
   */
-  
+  /*
   if( !$moodle->getcourse(array('username'=>'testxml') ) ){
    $courseFields['fullname'] = $fields['fullname'];
    $courseFields['shortname'] = $fields['shortname'];
@@ -72,11 +74,18 @@ else
   
   $course =  $moodle->createCourse(array('id'=>2));
 if ($course)
-  var_dump($course );  // Success, normal result.
+  ;//var_dump($course );  // Success, normal result.
 else
-  var_dump($moodle->error); // Error.
+  ;//var_dump($moodle->error); // Error.
+  }
+  */
+  $tellmemore = new Tellmemore();
   
-  
+  $classTmm =  $tellmemore->getClass(array('id'=>50385));
+if ($classTmm)
+  var_dump($classTmm );          // Success, normal result.
+else
+  var_dump($tellmemore->error); // Error.
   
 
 ?>

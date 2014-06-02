@@ -1,21 +1,30 @@
-<?php
+﻿<?php
 
-class Moodle {
+class Tellmemore {
 
-  var $token = '12a3019e66470c5b4ec451ebf7c725bd';  // Token to access Moodle server. Must be configured in Moodle. See readme.
-  var $server = 'https://moodle2-test2.univ-mlv.fr'; // Moodle URL, for example http://localhost:8080.
-  var $dir = null;    // Directory on the server. For example, /moodle. If your moodle runs as root, this is empty.
-  var $error = '';    // Last error of the class. We'll write the last error here when something wrong happens.
- 	
+
+	
+	var $ptf_server='https://he5.tellmemorecampus.com';
+    var $ptf_partner='
+    var $ptf_privateKey=
+    var $ptf_client=
+    var $ptf_host=
+    var $ptf_method=
+    var $ptf_offername='TELL ME MORE LICENSE';
+	
   // The init function initializes the variable of class (so that it can be used).
   function init($fields) {
-    $this->token = $fields['token'];
-    $this->server = $fields['server'];
-    $this->dir = $fields['dir'];
+    $this->ptf_server = $fields['ptf_server'];
+    $this->ptf_partner = $fields['ptf_partner'];
+    $this->ptf_privateKey = $fields['ptf_privateKey'];
+	$this->ptf_client = $fields['ptf_client'];
+    $this->ptf_host = $fields['ptf_host'];
+    $this->ptf_method = $fields['ptf_method'];
+	$this->ptf_offername = $fields['ptf_offername'];
   }
   
   // the getUserByField renvoie le tableau des users correspondant à la recherche
- //Prend un argument avec un array associtatif key value de la forme:  array('firstname'=>'huneau','id'=>16739)
+ //Prend un argument avec un array associtatif key value de la forme:  array('firstname'=>'huneau'),'id'=>16739)
    //champs authorisé 
    // "id" (int) matching user id,
    // "lastname" (string) user last name (Note: you can use % for searching but it may be considerably slower!),
@@ -24,9 +33,27 @@ class Moodle {
    // "username" (string) matching user username,
    // "email" (string) user email (Note: you can use % for searching but it may be considerably slower!),
    // "auth" (string) matching user auth plugin 
-  function getUserByField($userkey){
+  function getClass($userkey){
   // Clear last error. 
   	$this->error = null;
+	
+	$Timer=(string)gmdate("U"); 
+ 
+	// valid private key in this example is: p@ßwôrd, 
+	// please remark that the key must be utf8 encoded before 
+	// using it to calculate the MD5 value 
+	$PrivateKey = utf8_encode($this->ptf_privateKey); 
+	//result utf-8 value for this example: "p@ÃŸwÃ´rd"; 
+	
+	$login='';
+ 
+	// calculates the MD5 value to be validate in the TELL ME MORE portal 
+	// using the MD5 PHP native function 
+	$Check=MD5($login.$this->ptf_partner.$Timer.$PrivateKey);
+	
+	$ptf_methode='MD5';
+	
+	$ptf_cmd='501';
 
 	$counter = 0 ;
 	$criter = array();
@@ -34,25 +61,32 @@ class Moodle {
 	  $criter[$counter]=array('key'=>$key ,'value' => (string) $value);
 	}
 	
-	$request = xmlrpc_encode_request('core_user_get_users'
-	,array(  $criter )
-	,array('encoding'=>'UTF-8') );
-		
-     //var_dump($request);  // In case you want to see XML.
-     
-    $context = stream_context_create(array('http' => array(
-      'method' => "POST",
-      'header' => "Content-Type: text/xml",
-      'content' => $request
-    )));
-    
-    $path = $this->server.$this->dir."/webservice/xmlrpc/server.php?wstoken=".$this->token;
+    $path = $this->ptf_server."/ApiHandler.ashx?";
+	$path=$path.urlencode("ptf_cmd")."=".$ptf_cmd."&";
+	$path=$path.urlencode("ptf_partner")."=".$this->ptf_partner."&";
+	$path=$path.urlencode("ptf_timer")."=".$Timer."&";
+	$path=$path.urlencode("ptf_method")."=".$ptf_methode."&";
+	$path=$path.urlencode("ptf_check")."=".$Check;
+	
+	
+	
     // Send XML to server and get a reply from it.
-    $file = file_get_contents($path, false, $context); // $file is the reply from server.
-    // Decode the reply.
-    $response = xmlrpc_decode($file);
-	//var_dump($response['users'][0]); // for test purpose
+    $file = file_get_contents($path, false, null,0,500); // $file is the reply from server.
+	var_dump($path);
+/*	
+$file=str_replace('<', '', $file);
+$file=str_replace('>', '', $file);
+	var_dump($file);*/
+	var_dump(xml2array($path));
 
+	
+	/*
+    // Decode the reply.
+	$file=str_replace(';', '', $file);
+    $response = simplexml_load_string(str_replace(';', '', $file));
+	//var_dump($response['users'][0]); // for test purpose
+	var_dump($response);
+*/
     // Note: lack of permissions on Moodle will get us an XML-formatted response with NULL values.
     // In other words, one must be absolutely sure to give all the required capabilities to web services account
     // in order to execute this function successfully. Moodle says that we need the following:
@@ -67,7 +101,7 @@ class Moodle {
       else
         $this->error = 'Moodle returned no info. Check if user id exists and whether the web service
           account has capabilities required to execute core_user_get_users call.';
-      $this->error .= " Actual reply from server: ".$file;
+      //$this->error .= " Actual reply from server: ".$file;
       return false;
     }
     
